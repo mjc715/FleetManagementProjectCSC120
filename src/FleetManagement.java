@@ -6,8 +6,7 @@ public class FleetManagement {
 //----------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
 
-        BoatHolder daFleet = new BoatHolder();
-        ArrayList<Boat> boatList = new ArrayList<>();
+        BoatHolder daFleet;
         Scanner fileScanner = null;
 
         boolean proceed = false;
@@ -112,7 +111,7 @@ public class FleetManagement {
     private static void saveFleet(BoatHolder daFleet) {
         ObjectOutputStream toStream = null;
         try {
-            toStream = new ObjectOutputStream(new FileOutputStream("FleetData.db"));
+            toStream = new ObjectOutputStream(new FileOutputStream("FleetData.txt"));
             toStream.writeObject(daFleet);
 
         } catch (IOException e) {

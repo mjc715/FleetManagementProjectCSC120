@@ -1,7 +1,8 @@
 import java.util.*;
 import java.io.*;
+//======================================================================================================================
 public class BoatHolder implements Serializable {
-
+//----------------------------------------------------------------------------------------------------------------------
     private ArrayList<Boat> fleet;
 
     public BoatHolder() {
@@ -19,6 +20,7 @@ public class BoatHolder implements Serializable {
             fleet.get(i).printAll();
         }
     }
+//----------------------------------------------------------------------------------------------------------------------
     public void addBoat(String inputLine) {
 
         String [] attributes = inputLine.split(",");
@@ -27,6 +29,7 @@ public class BoatHolder implements Serializable {
         System.out.println("Boat added successfully");
 
     }
+//----------------------------------------------------------------------------------------------------------------------
     public int findBoat(String boatName) {
         int i;
         int boatPosition = -1;
@@ -46,9 +49,12 @@ public class BoatHolder implements Serializable {
         }
         return(boatPosition);
     }
+//----------------------------------------------------------------------------------------------------------------------
     public void removeBoat(int boatNumber) {
+
         fleet.remove(boatNumber);
     }
+//----------------------------------------------------------------------------------------------------------------------
     public void addExpense(double expense, int boatNumber) {
         if ((expense + fleet.get(boatNumber).getExpenses()) > fleet.get(boatNumber).getValue()) {
             System.out.println("Expense unauthorized, $" + (fleet.get(boatNumber).getValue() -
@@ -59,4 +65,6 @@ public class BoatHolder implements Serializable {
             System.out.println("Expense authorized, $" + fleet.get(boatNumber).getExpenses() + " spent");
         }
     }
+//----------------------------------------------------------------------------------------------------------------------
 }
+//======================================================================================================================
