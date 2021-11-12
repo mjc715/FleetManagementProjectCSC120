@@ -43,6 +43,18 @@
 
         }
 //----------------------------------------------------------------------------------------------------------------------
+    public String getName() {
+        return(name.toUpperCase());
     }
+    public double getExpenses() {
+        return(expenses);
+    }
+    public double getValue() {
+        return(value);
+    }
+    public void addExpenses(double expense) {
+        expenses += expense;
+    }
+}
 
 

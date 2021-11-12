@@ -2,17 +2,23 @@ import java.io.*;
 import java.util.*;
 //======================================================================================================================
 public class FleetManagement {
-    private static Scanner keyboard = new Scanner(System.in);
+    private static final Scanner keyboard = new Scanner(System.in);
 //----------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
 
+        BoatHolder daFleet = new BoatHolder();
         ArrayList<Boat> boatList = new ArrayList<>();
         Scanner fileScanner = null;
 
         boolean proceed = false;
+        String inputLine, name;
+        double expense;
+        int boatPosition = -1;
 
         if (args.length > 0) {
-           boatList = inputData(args[0]);
+            daFleet = new BoatHolder(inputData(args[0]));
+        } else {
+            daFleet = new BoatHolder(inputData("FleetData.db"));
         }
         System.out.println("Welcome to Castellucci Fleet Management");
         System.out.println("---------------------------------------");
@@ -20,24 +26,52 @@ public class FleetManagement {
         try {
             while (!proceed) {
                 System.out.println("(P)rint, (A)dd, (R)emove, (E)xpense, or E(x)it");
-                switch (keyboard.next().charAt(0)) {
+                switch (keyboard.next().toUpperCase().charAt(0)) {
                     case 'P':
-                        printFleet(boatList);
+                        daFleet.displayFleet();
                         System.out.println();
                         break;
                     case 'A':
-                        boatList = addBoat(boatList);
+                        System.out.printf("%-50s:", "Please enter the new boat CSV data");
+                        keyboard.nextLine();
+                        inputLine = keyboard.nextLine();
+                        daFleet.addBoat(inputLine);
                         break;
                     case 'R':
-                        //removeBoat();
-                        break;
+                        System.out.println("Which boat to remove?");
+                        keyboard.nextLine();
+                        name = keyboard.nextLine();
+                        boatPosition = daFleet.findBoat(name.toUpperCase());
+                        if (boatPosition == -1) {
+                            System.out.println(name + " not found.");
+                            break;
+                        } else {
+                            daFleet.removeBoat(boatPosition);
+                            System.out.println("Boat removed successfully");
+                            break;
+                        }
 
                     case 'E':
-                        //boatExpense();
+                        System.out.println("Which boat do you want to spend on?");
+                        keyboard.nextLine();
+                        name = keyboard.nextLine();
+                        boatPosition = daFleet.findBoat(name);
+                        if (boatPosition == -1) {
+                            System.out.println(name + " not found.");
+                            break;
+                        } else {
+                            System.out.println("How much do you want to spend?");
+                            expense = keyboard.nextDouble();
+                            daFleet.addExpense(expense, boatPosition);
+                        }
                         break;
                     case 'X':
-                        //exitAndSave();
+                        System.out.println("Exiting Castellucci Fleet Management");
+                        saveFleet(daFleet);
                         proceed = true;
+                        break;
+                    default:
+                        System.out.println("Invalid menu option, try again.");
                         break;
                 }
             }
@@ -75,25 +109,26 @@ public class FleetManagement {
         return(boatList);
     }
 //----------------------------------------------------------------------------------------------------------------------
-    private static void printFleet(ArrayList<Boat> boatList) {
+    private static void saveFleet(BoatHolder daFleet) {
+        ObjectOutputStream toStream = null;
+        try {
+            toStream = new ObjectOutputStream(new FileOutputStream("FleetData.db"));
+            toStream.writeObject(daFleet);
 
-        int i;
-        System.out.println("Fleet report:");
-        for (i = 0; i < boatList.size(); ++i) {
-            boatList.get(i).printAll();
+        } catch (IOException e) {
+            System.out.println("Error saving 1: " + e.getMessage());
+        } finally {
+            if (toStream != null) {
+                try {
+                    toStream.close();
+                } catch (IOException e) {
+                    System.out.println("Error saving 2: " + e.getMessage());
+                }
+            }
         }
+
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-    private static ArrayList<Boat> addBoat(ArrayList<Boat> boatList) {
-        String inputLine;
-        System.out.printf("%-50s:", "Please enter the new boat CSV data");
-        inputLine = keyboard.nextLine();
-        inputLine = keyboard.nextLine();
-        String [] attributes = inputLine.split(",");
-        Boat boat = new Boat(attributes);
-        boatList.add(boat);
-        return(boatList);
-    }
 }
 //======================================================================================================================
