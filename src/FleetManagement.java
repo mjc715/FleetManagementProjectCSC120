@@ -3,7 +3,7 @@ import java.util.*;
 //======================================================================================================================
 public class FleetManagement {
     private static final Scanner keyboard = new Scanner(System.in);
-    private static final String FILE_SAVE_LOCATION = "FleetData.txt";
+    private static final String FILE_SAVE_LOCATION = "FleetData.accdb";
 //----------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
 
@@ -18,7 +18,7 @@ public class FleetManagement {
         if (args.length > 0) {
             daFleet = new BoatHolder(inputCSVData(args[0]));
         } else {
-            daFleet = inputData(FILE_SAVE_LOCATION);
+            daFleet = inputData();
         }
         System.out.println("Welcome to Castellucci Fleet Management");
         System.out.println("---------------------------------------");
@@ -114,7 +114,7 @@ public class FleetManagement {
     private static void saveFleet(BoatHolder daFleet) {
         ObjectOutputStream toStream = null;
         try {
-            toStream = new ObjectOutputStream(new FileOutputStream("FleetData.txt"));
+            toStream = new ObjectOutputStream(new FileOutputStream(FILE_SAVE_LOCATION));
             toStream.writeObject(daFleet);
 
         } catch (IOException e) {
@@ -131,15 +131,14 @@ public class FleetManagement {
 
     }
 //----------------------------------------------------------------------------------------------------------------------
-    private static BoatHolder inputData(String fileName) {
+    private static BoatHolder inputData() {
 
         ObjectInputStream fromStream = null;
         BoatHolder daFleet = null;
 
-        if (fileName.equals(FILE_SAVE_LOCATION)) {
             try {
-                fromStream = new ObjectInputStream(new FileInputStream(fileName));
-                daFleet = (BoatHolder) fromStream.readObject();
+                fromStream = new ObjectInputStream(new FileInputStream(FleetManagement.FILE_SAVE_LOCATION));
+                daFleet = (BoatHolder)fromStream.readObject();
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -147,16 +146,14 @@ public class FleetManagement {
                 if (fromStream != null) {
                     try {
                         fromStream.close();
+                        System.out.println("Saved successfully.");
                     } catch (IOException e) {
                         System.out.println("Could not close " + e.getMessage());
                         return (null);
                     }
                 }
             }
-        } else {
-            System.out.print("Wrong filename.");
-            return(null);
-        }
+
         return (daFleet);
     }
 }

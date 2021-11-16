@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 
      private static enum boatType {POWER, SAILING};
-    boatType boatTypes [] = boatType.values();
 //----------------------------------------------------------------------------------------------------------------------
     public Boat() {
         name = "";
@@ -40,7 +39,7 @@ import java.io.Serializable;
  //---------------------------------------------------------------------------------------------------------------------
     public void printAll() {
 
-        System.out.printf("    %8s %-20s %-5d%-10s%2d' Paid: $%9.2f Expenses: $ %9.2f\n", boatTypeString, name, year,
+        System.out.printf("    %8s %-20s %-5d%-10s%2d' Paid: $%10.2f Expenses: $%10.2f\n", boatTypeString, name, year,
                 model, length, value, expenses);
 
         }
