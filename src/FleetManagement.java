@@ -3,6 +3,7 @@ import java.util.*;
 //======================================================================================================================
 public class FleetManagement {
     private static final Scanner keyboard = new Scanner(System.in);
+    private static final String FILE_SAVE_LOCATION = "FleetData.txt";
 //----------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
 
@@ -15,9 +16,9 @@ public class FleetManagement {
         int boatPosition = -1;
 
         if (args.length > 0) {
-            daFleet = new BoatHolder(inputData(args[0]));
+            daFleet = new BoatHolder(inputCSVData(args[0]));
         } else {
-            daFleet = new BoatHolder(inputData("FleetData.db"));
+            daFleet = inputData(FILE_SAVE_LOCATION);
         }
         System.out.println("Welcome to Castellucci Fleet Management");
         System.out.println("---------------------------------------");
@@ -80,15 +81,17 @@ public class FleetManagement {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-    private static ArrayList<Boat> inputData(String fileName) {
+    private static ArrayList<Boat> inputCSVData(String fileName) {
 
         Scanner fileScanner = null;
+        ObjectInputStream fromStream;
         String type, model, name, line;
         int length, year, typeInt;
         double price;
         ArrayList<Boat> boatList = new ArrayList<>();
+        BoatHolder daFleet = null;
 
-        try {
+         try {
             fileScanner = new Scanner(new FileInputStream(fileName));
             while (fileScanner.hasNextLine()) {
                 line = fileScanner.nextLine();
@@ -115,7 +118,7 @@ public class FleetManagement {
             toStream.writeObject(daFleet);
 
         } catch (IOException e) {
-            System.out.println("Error saving 1: " + e.getMessage());
+            System.out.println("Error saving 1: " + e.getLocalizedMessage());
         } finally {
             if (toStream != null) {
                 try {
@@ -127,7 +130,34 @@ public class FleetManagement {
         }
 
     }
-
 //----------------------------------------------------------------------------------------------------------------------
+    private static BoatHolder inputData(String fileName) {
+
+        ObjectInputStream fromStream = null;
+        BoatHolder daFleet = null;
+
+        if (fileName.equals(FILE_SAVE_LOCATION)) {
+            try {
+                fromStream = new ObjectInputStream(new FileInputStream(fileName));
+                daFleet = (BoatHolder) fromStream.readObject();
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                if (fromStream != null) {
+                    try {
+                        fromStream.close();
+                    } catch (IOException e) {
+                        System.out.println("Could not close " + e.getMessage());
+                        return (null);
+                    }
+                }
+            }
+        } else {
+            System.out.print("Wrong filename.");
+            return(null);
+        }
+        return (daFleet);
+    }
 }
 //======================================================================================================================
