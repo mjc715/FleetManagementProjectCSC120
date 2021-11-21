@@ -3,6 +3,7 @@ import java.io.*;
 //======================================================================================================================
 public class BoatHolder implements Serializable {
 //----------------------------------------------------------------------------------------------------------------------
+    //---- BoatHolder basically just an object that holds an array of Boats and can modify them
     private ArrayList<Boat> fleet;
 
     public BoatHolder() {
@@ -17,12 +18,13 @@ public class BoatHolder implements Serializable {
 
         System.out.println("Fleet report: ");
         for (i = 0; i < fleet.size(); i++) {
-            fleet.get(i).printAll();
+            System.out.print(fleet.get(i).toString());
         }
     }
 //----------------------------------------------------------------------------------------------------------------------
     public void addBoat(String inputLine) {
 
+        //---- Adds boat using a CSV line and splits it up into components to create a new boat
         String [] attributes = inputLine.split(",");
         Boat boat = new Boat(attributes);
         fleet.add(boat);
@@ -33,17 +35,18 @@ public class BoatHolder implements Serializable {
     public int findBoat(String boatName) {
         int i;
         int boatPosition = -1;
-        boolean found = false;
+        boolean done = false;
 
-        while (!found) {
+        //---- Compares the inputted name to all names for the boats until one is found
+        while (!done) {
             for (i = 0; i < fleet.size(); i++) {
                 if (boatName.toUpperCase().equals(fleet.get(i).getName())) {
-                    found = true;
+                    done = true;
                     boatPosition = i;
                 }
             }
-            if (i == fleet.size() && !found) {
-                found = true;
+            if (i == fleet.size() && !done) {
+                done = true;
             }
 
         }
@@ -56,6 +59,8 @@ public class BoatHolder implements Serializable {
     }
 //----------------------------------------------------------------------------------------------------------------------
     public void addExpense(double expense, int boatNumber) {
+
+        //---- Gets expense and compares it to the boat's value and determines if it is within the budget
         if ((expense + fleet.get(boatNumber).getExpenses()) > fleet.get(boatNumber).getValue()) {
             System.out.println("Expense unauthorized, $" + (fleet.get(boatNumber).getValue() -
                     fleet.get(boatNumber).getExpenses() + " left to spend"));

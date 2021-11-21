@@ -3,26 +3,33 @@ import java.util.*;
 //======================================================================================================================
 public class FleetManagement {
     private static final Scanner keyboard = new Scanner(System.in);
+
+    //---- Final variable for where to load and save data from
     private static final String FILE_SAVE_LOCATION = "FleetData.accdb";
 //----------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
 
+        //---- Declaring the fleet variable to hold boat objects
         BoatHolder daFleet;
-        Scanner fileScanner = null;
 
         boolean proceed = false;
         String inputLine, name;
         double expense;
         int boatPosition = -1;
 
+        //---- This if statement loads data from the csv file if an argument is inputted, otherwise it loads from database
         if (args.length > 0) {
             daFleet = new BoatHolder(inputCSVData(args[0]));
         } else {
             daFleet = inputData();
         }
+
+        //---- Options menu display and selection process
         System.out.println("Welcome to Castellucci Fleet Management");
         System.out.println("---------------------------------------");
         System.out.println();
+        daFleet.displayFleet();
+
         try {
             while (!proceed) {
                 System.out.println("(P)rint, (A)dd, (R)emove, (E)xpense, or E(x)it");
@@ -83,13 +90,11 @@ public class FleetManagement {
 //----------------------------------------------------------------------------------------------------------------------
     private static ArrayList<Boat> inputCSVData(String fileName) {
 
+        /* Gets strings from the CSV (1 line = 1 string) then splits them by commas and uses that to make boats */
+
         Scanner fileScanner = null;
-        ObjectInputStream fromStream;
-        String type, model, name, line;
-        int length, year, typeInt;
-        double price;
+        String line;
         ArrayList<Boat> boatList = new ArrayList<>();
-        BoatHolder daFleet = null;
 
          try {
             fileScanner = new Scanner(new FileInputStream(fileName));
@@ -112,7 +117,10 @@ public class FleetManagement {
     }
 //----------------------------------------------------------------------------------------------------------------------
     private static void saveFleet(BoatHolder daFleet) {
+
         ObjectOutputStream toStream = null;
+
+        //---- Saves fleet object to the file save location (database)
         try {
             toStream = new ObjectOutputStream(new FileOutputStream(FILE_SAVE_LOCATION));
             toStream.writeObject(daFleet);
@@ -136,6 +144,7 @@ public class FleetManagement {
         ObjectInputStream fromStream = null;
         BoatHolder daFleet = null;
 
+        //---- Inputs data from the database file instead of the CSV argument
             try {
                 fromStream = new ObjectInputStream(new FileInputStream(FleetManagement.FILE_SAVE_LOCATION));
                 daFleet = (BoatHolder)fromStream.readObject();

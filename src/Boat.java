@@ -3,9 +3,10 @@ import java.io.Serializable;
 //======================================================================================================================
  public class Boat implements Serializable {
 
+     //---- Boat object just holds all these variables and manipulates them
     private String name, model, boatTypeString;
     private double value, expenses;
-    private int year, boatTypeInt, length;
+    private int year, length;
 
 
      private static enum boatType {POWER, SAILING};
@@ -16,17 +17,9 @@ import java.io.Serializable;
         expenses = 0;
     }
 //----------------------------------------------------------------------------------------------------------------------
-    public Boat(int boatTypeInt, String name, int year, String model, int length, double value) {
-        this();
-        this.name = name;
-        this.value = value;
-        this.boatTypeInt = boatTypeInt;
-        this.length = length;
-        this.model = model;
-        this.year = year;
-    }
-//----------------------------------------------------------------------------------------------------------------------
     public Boat(String [] boatData) {
+
+        //---- Constructor uses an array of Strings to create a boat
         this();
         boatTypeString = boatData[0];
         name = boatData[1];
@@ -39,12 +32,15 @@ import java.io.Serializable;
  //---------------------------------------------------------------------------------------------------------------------
     public void printAll() {
 
+        //---- Prints all the boat data in a formatted fashion
         System.out.printf("    %8s %-20s %-5d%-10s%2d' Paid: $%10.2f Expenses: $%10.2f\n", boatTypeString, name, year,
                 model, length, value, expenses);
 
         }
 //----------------------------------------------------------------------------------------------------------------------
     public String getName() {
+
+        //---- Returns a boat's name in uppercase
         return(name.toUpperCase());
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -60,7 +56,15 @@ import java.io.Serializable;
         expenses += expense;
     }
 //----------------------------------------------------------------------------------------------------------------------
-}
+    public String toString() {
+
+        //---- Prints all the boat data in a formatted fashion
+        return(String.format("    %8s %-20s %-5d%-10s%2d' Paid: $%10.2f Expenses: $%10.2f\n", boatTypeString, name, year,
+            model, length, value, expenses));
+
+    }
+//----------------------------------------------------------------------------------------------------------------------
+ }
 //======================================================================================================================
 
 
